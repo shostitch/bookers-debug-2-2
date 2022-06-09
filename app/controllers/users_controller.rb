@@ -3,6 +3,13 @@ class UsersController < ApplicationController
   before_action :ensure_correct_user, only: [:edit,:update]
 
   def show
+    @see = See.find_by(ip: request.remote_ip)
+      if @see
+        @books = Book.all
+      else
+        @books = Book.all
+        See.create(ip: request.remote_ip)
+      end
     @user = User.find(params[:id])
     to  = Time.current.at_end_of_day
     from  = (to - 6.day).at_beginning_of_day

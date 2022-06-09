@@ -3,6 +3,13 @@ class BooksController < ApplicationController
 
 
   def show
+    @see = See.find_by(ip: request.remote_ip)
+      if @see
+        @books = Book.all
+      else
+        @books = Book.all
+        See.create(ip: request.remote_ip)
+      end
     @book = Book.find(params[:id])
     @user = @book.user
     @book_new = Book.new
@@ -10,6 +17,13 @@ class BooksController < ApplicationController
   end
 
   def index
+    @see = See.find_by(ip: request.remote_ip)
+      if @see
+        @books = Book.all
+      else
+        @books = Book.all
+        See.create(ip: request.remote_ip)
+      end
     to = Time.current.at_end_of_day
     from = (to - 6.day).at_beginning_of_day
     @books = Book.includes(:favorited_users).
